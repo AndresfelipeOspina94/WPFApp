@@ -19,6 +19,19 @@ namespace WPFApp
         public MainWindow()
         {
             InitializeComponent();
+            CreateTask();
+        }
+
+        void AddMessage(string message)
+        {
+            int CurrentThreadId = Thread.CurrentThread.ManagedThreadId;
+            this.Dispatcher.Invoke(() =>
+            {
+
+                Messages.Content +=
+                    $"Mesaje: {message}," +
+                    $"hilo actual:{CurrentThreadId}\n";
+            });
         }
 
         void CreateTask()
@@ -39,25 +52,29 @@ namespace WPFApp
             Task T4 = new Task(() => MessageBox.Show("Ejecutando la tarea 4"));
 
             Task T5 = new Task(() =>
-                {
-                    DateTime CurrenDate = DateTime.Today;
-                    DateTime StarDate= CurrenDate.AddDays(30);
-                    MessageBox.Show($"Tarea 5.  Fecha calculada: {StarDate}");
-                }
+            {
+                DateTime CurrenDate = DateTime.Today;
+                DateTime StarDate = CurrenDate.AddDays(30);
+                MessageBox.Show($"Tarea 5.  Fecha calculada: {StarDate}");
+            }
                 );
 
             Task T6 = new Task((message) =>
             MessageBox.Show(message.ToString()), "exprecion lambda con parametros");
 
+            Task T7 = new Task(() => AddMessage("ejecutando la tarea"));
+            T7.Start();
+            AddMessage("el hilo principal");
+
         }
 
-        
+
 
         void ShowMessage()
         {
             MessageBox.Show("Ejecutando el metodo ShowMessage");
         }
 
-        
-}
+
+    }
 }
